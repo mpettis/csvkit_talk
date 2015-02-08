@@ -1,0 +1,199 @@
+################################################################################
+## Notes
+################################################################################
+
+o. dat/ file generation
+    - Run generate_csv_files.R to make some files.
+    - Run alter_csv_files.sh to make some rows that have errors or other oddities to discover.
+
+o. Create a sqlite database
+    - in alter_csv_files.sh
+
+
+
+
+
+o. Things to do:
+
+#### csvlook
+
+# look at a file
+csvlook dat/mtcars_001.csv
+
+# long file
+csvlook dat/long_flights.csv
+
+# Better if you could page through it
+csvlook dat/long_flights.csv | less
+
+# Look at a wide file ... gets ugly
+csvlook dat/wide_mtcars.csv
+
+# Can make look nicer with `less'
+csvlook dat/wide_mtcars.csv | less -S
+
+# Can issue `-S' if you forgot at the outset
+# .. after starting, type `-S' and <enter> to not wrap lines
+csvlook dat/wide_mtcars.csv | less
+
+
+
+#### csvstats
+
+# Check out what a file looks like:
+csvstat dat/mtcars_001.csv
+
+# Check out what a file looks like, but with a `less' pager
+csvstat dat/mtcars_001.csv | less
+
+# Check out what a file looks like, check for nulls
+csvstat dat/mtcars_001.csv --nulls
+
+# File that does have some nulls
+csvstat dat/mtcars_blank-select_cells.csv --nulls
+csvstat dat/wide_mtcars.csv --nulls
+csvstat dat/wide_flights_dest_month.csv --nulls
+
+# Check out what a file looks like, check for max
+csvstat dat/mtcars_001.csv --max
+
+# Check out what a file looks like, row count
+csvstat dat/mtcars_001.csv --count
+
+# Check out what a file looks like, row count
+csvstat dat/mtcars_001.csv --freq
+
+
+
+#### csvclean
+
+# This has no errors
+csvclean -n dat/mtcars_001.csv
+
+# Has errors, see on stdout
+csvclean -n dat/mtcars_too-many-fields.csv
+
+# output errors to file for reading later on
+csvclean dat/mtcars_too-many-fields.csv
+
+
+
+#### in2csv
+
+# Extract table data from excel
+in2csv --sheet "mtcars-s1" dat/xlsx_mtcars.xlsx
+in2csv --sheet "mtcars-s1" dat/xlsx_mtcars.xlsx | csvlook
+
+# Extract table data from excel
+# Be careful that the table starts in A1, or you have to do some pre-cleaning of the data
+in2csv --sheet "mtcars-s2" dat/xlsx_mtcars.xlsx
+in2csv --sheet "mtcars-s2" dat/xlsx_mtcars.xlsx | csvlook
+
+# Convert from pipes to commas
+less dat/mtcars_pipes.csv
+in2csv dat/mtcars_pipes.csv
+in2csv -d\| dat/mtcars_pipes.csv # Alternate explicit designation of pipe as the delimiter
+
+# Convert from tabs to commas
+less dat/mtcars_tabs.csv
+in2csv dat/mtcars_tabs.csv
+in2csv -t dat/mtcars_tabs.csv # -t specifies that the delimiter is a tab character
+
+# (Advanced) json file
+cat dat/issues.json | less
+in2csv -f json -v dat/issues.json | csvlook | less
+
+
+
+#### csvstack
+
+# Stack two files
+csvstack dat/mtcars_001.csv dat/mtcars_002.csv
+csvstack dat/mtcars_001.csv dat/mtcars_002.csv | csvlook
+csvstack dat/mtcars_001.csv dat/mtcars_002.csv | csvlook | less
+
+# Stack a set of files
+csvstack dat/mtcars_00*.csv
+csvstack dat/mtcars_00*.csv | csvlook | less
+
+# Add the filenames to the csv output so you know where it came from
+csvstack --filenames dat/mtcars_00*.csv | csvlook | less
+
+# Doesn't read header names, so column names have to be in same order
+csvstack dat/mtcars_001.csv dat/mtcars_col-order-shuffle.csv | csvlook | less
+
+
+
+#### sql2csv
+
+# extract from a database
+sql2csv --db "sqlite:///dat/mtcars.db" --query "select * from mtcarstbl"
+sql2csv --db "sqlite:///dat/mtcars.db" --query "select * from mtcarstbl" | csvlook
+
+
+
+#### csvsql
+csvsql --db "sqlite:///dat/mtcars.db" --table "test" --insert dat/mtcars_001.csv
+
+
+
+
+#### csvcut
+
+# Just show columns and column indexes
+csvcut -n dat/mtcars_001.csv
+
+# Look at columns 1 and 11
+csvcut -c 1,11 dat/mtcars_001.csv | csvlook
+
+# Look at columns by name
+csvcut -c mpg,wt dat/mtcars_001.csv | csvlook
+
+# Add line numbers
+csvcut -c mpg,wt -l dat/mtcars_001.csv | csvlook
+
+
+
+#### csvgrep
+
+# Search for things with "azd" in name
+csvgrep -c name -m "azd" dat/mtcars_001.csv | csvlook
+
+# Search for things with 'a' as second letter from front
+csvgrep -c name -r "^.a" dat/mtcars_001.csv | csvlook
+
+
+
+#### csvsort
+
+# Sort on first column
+csvsort -c name dat/mtcars_001.csv | csvlook
+
+# Sort first column reverse
+csvsort -r -c name dat/mtcars_001.csv | csvlook
+
+
+
+#### csvformat
+
+# Output to tab delimited
+csvformat -T dat/mtcars_001.csv
+
+# Output to pipe delimited
+csvformat -D\| dat/mtcars_001.csv
+
+
+
+#### csvjson
+
+# Convert
+csvjson dat/mtcars_001.csv
+
+
+
+
+#### csvpy
+
+# open into python shell to manipulate
+csvpy dat/mtcars_001.csv
+
