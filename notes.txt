@@ -302,4 +302,12 @@ for f in $(ls dat/mtcars_*.csv); do
 done | sort | uniq -c
 
 
-
+# Visually browse the files
+for f in $(ls dat/mtcars_00*.csv dat/mtcars_blank-select_cells.csv dat/mtcars_blank-out-row.csv dat/mtcars_noheader.csv | gshuf); do
+    echo
+    echo
+    echo "-----"
+    echo "file: " $f
+    echo
+    head $f | csvlook
+done | less
