@@ -49,3 +49,8 @@ write.csv(flights %>% head(333), file.path(dir_dat, "long_flights.csv"), row.nam
     ## 4. Make a wide dataset of some subset of flights
 write.csv(flights %>% group_by(dest, month) %>% tally %>% spread(dest, n), file.path(dir_dat, "wide_flights_dest_month.csv"), row.names=FALSE)
 
+
+    ## 5. Make some datafiles that are joinable
+write.csv(data.frame(k=letters[1:3], v=1:3, stringsAsFactors=FALSE), file.path(dir_dat, "join_1.csv"), row.names=FALSE)
+write.csv(data.frame(k=letters[2:4], v=2:4, stringsAsFactors=FALSE), file.path(dir_dat, "join_2.csv"), row.names=FALSE)
+

@@ -17,8 +17,20 @@ o. Things to do:
 
 #### csvlook
 
-# look at a file
+# Looking at a file without these tools
+cat dat/mtcars_001.csv
+less dat/mtcars_001.csv
+
+# A bit better
+cat dat/mtcars_001.csv | column -t -s,
+
+# ---
+
+# look at a file with some formatting
 csvlook dat/mtcars_001.csv
+
+# Add line numbers
+csvlook -l dat/mtcars_001.csv
 
 # long file
 csvlook dat/long_flights.csv
@@ -51,8 +63,16 @@ csvstat dat/mtcars_001.csv --nulls
 
 # File that does have some nulls
 csvstat dat/mtcars_blank-select_cells.csv --nulls
+csvlook dat/mtcars_blank-select_cells.csv
+
 csvstat dat/wide_mtcars.csv --nulls
+csvlook dat/wide_mtcars.csv
+
 csvstat dat/wide_flights_dest_month.csv --nulls
+csvlook dat/wide_flights_dest_month.csv
+
+
+
 
 # Check out what a file looks like, check for max
 csvstat dat/mtcars_001.csv --max
@@ -105,6 +125,13 @@ in2csv -f json -v dat/issues.json | csvlook | less
 
 
 
+
+#### csvjson
+
+# Convert
+csvjson dat/mtcars_001.csv
+
+
 #### csvstack
 
 # Stack two files
@@ -126,6 +153,12 @@ csvstack dat/mtcars_001.csv dat/mtcars_col-order-shuffle.csv | csvlook | less
 
 #### sql2csv
 
+# Look at the database:
+sqlite3 dat/mtcars.db
+.tables
+select * from mtcarstbl;
+
+
 # extract from a database
 sql2csv --db "sqlite:///dat/mtcars.db" --query "select * from mtcarstbl"
 sql2csv --db "sqlite:///dat/mtcars.db" --query "select * from mtcarstbl" | csvlook
@@ -133,7 +166,23 @@ sql2csv --db "sqlite:///dat/mtcars.db" --query "select * from mtcarstbl" | csvlo
 
 
 #### csvsql
+
+# Insert into db
+sqlite3 dat/mtcars.db
+.tables
+drop table test;
+
 csvsql --db "sqlite:///dat/mtcars.db" --table "test" --insert dat/mtcars_001.csv
+csvsql --db "sqlite:///dat/mtcars.db" --table "test" --insert dat/wide_flights_dest_month.csv
+
+# Treat csv as a sql table and perform sql queries against it
+csvsql --query "select avg(mpg) as mean_mpg from mtcars_001" dat/mtcars_001.csv
+
+# Create table statement
+csvsql -i oracle --table mtcars dat/mtcars_001.csv
+
+# Would like to see: way of outputting the individual `insert' statements.
+
 
 
 
@@ -196,4 +245,61 @@ csvjson dat/mtcars_001.csv
 
 # open into python shell to manipulate
 csvpy dat/mtcars_001.csv
+
+
+
+#### csvjoin
+
+# Inner, outer, left, and right joins
+cat dat/join_1.csv
+cat dat/join_2.csv
+
+csvjoin -c "k" dat/join_1.csv dat/join_2.csv | csvlook
+csvjoin -c "k" --outer dat/join_1.csv dat/join_2.csv | csvlook
+csvjoin -c "k" --left dat/join_1.csv dat/join_2.csv | csvlook
+csvjoin -c "k" --right dat/join_1.csv dat/join_2.csv | csvlook
+
+
+
+
+
+#### Fancier interaction with bash
+
+# Show headers for groups
+for f in $(ls dat/mtcars_00*.csv); do
+    head -1 $f 
+done | csvlook -H
+
+# someone missing a header?
+for f in $(ls dat/mtcars_00*.csv dat/mtcars_noheader.csv | gshuf); do
+    head -1 $f 
+done | csvlook -H
+
+
+
+
+# One file with headers out of order
+for f in $(ls dat/mtcars_00*.csv dat/mtcars_col-order-shuffle.csv | gshuf); do
+    head -1 $f 
+done | csvlook -H
+
+
+
+# Alternate, no csvkit tools
+for f in $(ls dat/mtcars_00*.csv dat/mtcars_col-order-shuffle.csv | gshuf); do
+    head -1 $f 
+done | sort | uniq -c
+
+
+# For larger set of files
+for f in $(ls dat/mtcars_*.csv); do
+    head -1 $f 
+done | csvlook -H
+
+# Alt, bash tools
+for f in $(ls dat/mtcars_*.csv); do
+    head -1 $f 
+done | sort | uniq -c
+
+
 
