@@ -238,7 +238,11 @@ csvformat -D\| dat/mtcars_001.csv
 # Convert
 csvjson dat/mtcars_001.csv
 
+# Convert, and indent
+csvjson -i 4 dat/mtcars_001.csv | less
 
+# Convert, indent, name the dicts
+csvjson -i 4 -k name dat/mtcars_001.csv | less
 
 
 #### csvpy
