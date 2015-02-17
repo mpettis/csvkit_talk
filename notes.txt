@@ -316,3 +316,16 @@ for f in $(ls dat/mtcars_00*.csv dat/mtcars_blank-select_cells.csv dat/mtcars_bl
     echo
     head $f | csvlook
 done | less
+
+
+
+# Visually browse some config files
+for f in $(ls example_cfg/*.csv); do
+    echo
+    echo
+    echo "file: " $f
+    echo "=================================="
+    echo
+    head $f | csvlook
+done | less -S
+

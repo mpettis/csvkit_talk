@@ -1,0 +1,82 @@
+PRESENTATION EXAMPLES
+========================================================================
+
+o. An example to show where command-line can really help:
+
+    for f in $(ls example_cfg/*.csv); do
+        echo
+        echo
+        echo "line count and file name: " $(wc -l $f)
+        echo "=================================="
+        echo
+        head $f | csvlook
+    done | less -S
+
+
+
+o. Raw CSV
+
+    cat dat/mtcars_001.csv | less
+
+o. Formatted CSV
+
+    cat dat/mtcars_001.csv | csvlook | less
+
+o. Formatted CSV, wide
+
+    head -4 dat/wide_mtcars.csv | csvlook | less -S
+
+o. Stack files (and format)
+
+    csvstack --filenames dat/mtcars_0*.csv | csvlook | less
+
+o. Validate files
+
+    csvlook dat/mtcars_blank-select_cells.csv | less -S
+
+    csvstat --nulls dat/mtcars_blank-select_cells.csv
+
+    csvstat --max dat/mtcars_blank-select_cells.csv
+
+o. Cleaning files
+
+    less -S dat/mtcars_001.csv
+
+    less -S dat/mtcars_too-many-fields.csv
+
+    csvlook dat/mtcars_too-many-fields.csv | less -S
+
+    csvclean -n dat/mtcars_too-many-fields.csv
+
+    csvclean dat/mtcars_too-many-fields.csv
+
+    less dat/mtcars_too-many-fields_err.csv
+
+    less dat/mtcars_too-many-fields_out.csv
+
+
+o. Getting from Excel to csv
+
+    open dat/xlsx_mtcars.xlsx
+
+    in2csv --sheet "mtcars-s1" dat/xlsx_mtcars.xlsx | less -S
+
+    in2csv --sheet "mtcars-s2" dat/xlsx_mtcars.xlsx | less -S
+
+o. In from lternate delimiters
+
+    less dat/mtcars_pipes.csv
+
+    in2csv -d\| dat/mtcars_pipes.csv | less
+
+    less dat/mtcars_tabs.csv
+
+    in2csv -t dat/mtcars_tabs.csv | less
+
+o. Out to alternate delimiters
+
+    less dat/mtcars_001.csv
+
+    csvformat -D\| dat/mtcars_001.csv | less
+
+

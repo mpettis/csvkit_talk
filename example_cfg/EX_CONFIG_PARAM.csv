@@ -1,0 +1,7 @@
+ACTION,NAMESPACE,NAME,VALUE,VALUE_NUMBER,VALUE_BIGSTRING,VALUE_CLOB
+D,Strategy,%,,,,
+U,Strategy,ChainDefaultStrategy,FASHION8STD,,,
+U,Strategy,StrategyGroupGraphSid,PRODUCT_SCI,,,
+U,Strategy,StrategyGroupNodeType,SUB-SSN3,,,
+U,Strategy,StrategyGradeGroupGraphSid,LOCATION_SCI,,,
+U,Strategy,StrategyGradeGroupNodeType,ROOT,,,

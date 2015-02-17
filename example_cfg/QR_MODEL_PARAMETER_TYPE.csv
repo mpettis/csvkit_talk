@@ -1,0 +1,8 @@
+PARAMETER_TYPE_CD,PARAMETER_TYPE_DESC
+WOS,Weeks of Supply
+BIAS,OutputBia
+WEIGHT,InputWeight
+STDDEV,StandardDeviation
+CONST,Constant
+CWOS,CWOS
+AOC,Allocation Order Cycle

@@ -1,0 +1,76 @@
+INTRO
+========================================================================
+This is meant to be a list of examples with some more explanation.
+
+
+EXAMPLES
+========================================================================
+
+Here's a big one just to get a flavor of a situation where I think
+csvkit/command-line is better than Excel.  There will be simpler ones, but this
+is good to show where it really surpasses Excel/GUI solutions...
+
+Suppose you have a directory with a handful of CSV files that all have a little
+bit of information you want to look at pretty much at the same time.  You could
+open then all in Excel and toggle between worksheets/workbooks, or do this:
+
+    for f in $(ls example_cfg/*.csv); do
+        echo
+        echo
+        echo "line count and file name: " $(wc -l $f)
+        echo "=================================="
+        echo
+        head $f | csvlook
+    done | less -S
+
+A few words in way of expectation and explanation.  The `for' loop will loop
+over all of the values found by the `ls' command, and in turn put the names in
+the `$f' variable.  In the loop, I issue a few `echo' commands to skip some
+lines, display the actual linecount and filename to be shown, a little `===...'
+to offset the name from the rest, and then use `head' in conjunction with
+`csvlook' to look at the top few lines of each file.
+
+I issue the `head' command rather then look at the whole file just so I get an
+example, and if I have a big file as one of the files, I don't have to page
+through all of the rows of the big file.
+
+
+
+So let's back up and take a look at `csvlook'.  Normal CSV files are just
+a series of lines, with each line containing either the header or row of
+fields, separated by commas.  And all of the fields are all scrunched together,
+with no spacing or alignment to help you compare similar values in similar
+columns betwen lines.  Which is one of the reasons to open a CSV in Excel: it
+aligns data in the same columns in an actual vertical column for easy viewing.
+But `csvlook' is a tool to do the same thing without having to leave the
+command line.
+
+Here's what the top lines of a raw CSV look like:
+
+    $ head -4 dat/mtcars_001.csv
+
+    "name","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"
+    "Mazda RX4",21,6,160,110,3.9,2.62,16.46,0,1,4,4
+    "Mazda RX4 Wag",21,6,160,110,3.9,2.875,17.02,0,1,4,4
+    "Datsun 710",22.8,4,108,93,3.85,2.32,18.61,1,1,4,1
+
+The line starting with `$' has the command on it, and some or all of the data after it.
+
+This is all scrunched together.  Let's format it with csvlook:
+
+    $ head -4 dat/mtcars_001.csv | csvlook
+
+    |----------------+------+-----+------+-----+------+-------+-------+----+----+------+-------|
+    |  name          | mpg  | cyl | disp | hp  | drat | wt    | qsec  | vs | am | gear | carb  |
+    |----------------+------+-----+------+-----+------+-------+-------+----+----+------+-------|
+    |  Mazda RX4     | 21   | 6   | 160  | 110 | 3.9  | 2.62  | 16.46 | 0  | 1  | 4    | 4     |
+    |  Mazda RX4 Wag | 21   | 6   | 160  | 110 | 3.9  | 2.875 | 17.02 | 0  | 1  | 4    | 4     |
+    |  Datsun 710    | 22.8 | 4   | 108  | 93  | 3.85 | 2.32  | 18.61 | 1  | 1  | 4    | 1     |
+    |----------------+------+-----+------+-----+------+-------+-------+----+----+------+-------|
+
+For an added bonus, I like to copy this output directly and paste it into
+emails when I want to point people to the contents of files (or examples).  If
+you put the output in a monospace font, you can inline the table in a nice way
+in the email, and not have to attach a separate file that the end-user has to
+open.
+
