@@ -21,7 +21,7 @@ incremental: true
 - What problems do you have, or have you seen with CSV?
     - This can be about the format, or about dealing with files in general
 - Take a minute to come up with some of these problems
-- What did you pull up?
+- Share...
 
 
 
@@ -66,7 +66,12 @@ incremental: true
 
 
 
+Summary
+========================================================
 
+- csvkit and other command-line tools can make inspecting CSV files stay lightweight.
+- Certain validation checks can be automated.
+- Transforming input and output formats can be made easier.
 
 
 

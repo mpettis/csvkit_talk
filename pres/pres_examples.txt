@@ -54,6 +54,15 @@ o. Cleaning files
 
     less dat/mtcars_too-many-fields_out.csv
 
+    less dat/escape_good.csv
+
+    csvlook dat/escape_good.csv
+
+    less dat/escape_bad.csv
+
+    csvlook dat/escape_bad.csv
+
+    csvclean -n dat/escape_bad.csv
 
 o. Getting from Excel to csv
 
@@ -78,5 +87,10 @@ o. Out to alternate delimiters
     less dat/mtcars_001.csv
 
     csvformat -D\| dat/mtcars_001.csv | less
+
+o. Treating csv files as sql tables
+
+    csvsql --query "select avg(mpg) as avg_mpg from mtcars_001" dat/mtcars_001.csv
+
 
 
