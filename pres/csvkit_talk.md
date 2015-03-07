@@ -12,32 +12,28 @@ email: matthew.pettis@gmail.com
 github: https://github.com/mpettis/csvkit_talk
 
 
+
+
+How I feel about new tools...
+========================================================
+
+<br/>
+![xkcd](img/regular_expressions.png)
+
+
 Problems with CSV
 ========================================================
 incremental: true
 
 <br/>
-
-- What problems do you have, or have you seen with CSV?
-    - This can be about the format, or about dealing with files in general
-- Take a minute to come up with some of these problems
-- Share...
-
-
-
-Problems I've had with CSV
-========================================================
-incremental: true
-
-<br/>
+- Reading them at all.
+- Dealing with lots of them, same format, many files.
 - Blank cells when I was told that all cells would have values.
     - So, people lying to me.
 - Missing header line when expected, or a header line when not expected.
 - Not the same number of cells in a row as there are in the header.
 - Improperly escaped commas or double-quotes
 - Wrong kind of line ending for my OS
-- Lots of files I have to sort through and make sense of.
-- If an email references data in a small table, I hate having to open a separate file to look at the data.
 
 
 
@@ -45,43 +41,59 @@ Why Not Excel?
 ========================================================
 incremental: true
 
-- Well, you can.  And most people do.
+- Because it makes me feel like this:
+![zoolander](img/zoolander-computer-de.jpg)
+
+
+
+Why Not Excel?
+========================================================
+incremental: true
+
+- Well, you can; most people do.
 - It is the right tool for some jobs.
 - But some things can be done better...
+    - Automation
+    - Reproducible Research -- not manually changing raw data.
 - Let's look at some examples...
 
 
 
-Alternates: Bash + custom tools
+Tools to use in conjunction
 ========================================================
 incremental: true
 
-- People smarter than me have had to deal with similar problems for decades, and have written tools.
-    - `cat` : Dump a file to your screen
-    - `head` and `tail` : Dump the beginnings and ends of files to screen.
-    - `echo` : Copy strings you generate or type (not from a file usually) to the screen.
-    - `less` : An interactive viewer for viewing a whole file, but stops all of the lines from just running off the top of the screen.
-    - Control structures (`for`, `while`) : Allow you to apply your commands one at a time to each CSV file.
-    - ... and many more.
+- `python`: This toolkit is written in it, and can drop you into the interactive shell.
+- `cat`, `echo`, `head`, `tail`, `less` : Dump contents of files and variables to your screen
+- `grep`, `sed`, `awk`, `perl` : filtering/munging on a line-by-line basis.  Are their own programming language in their own right.
+- Control structures (`for`, `while`) : Allow you to apply your commands one at a time to each CSV file.
+- ... and many more.
 
 
 
 Summary
 ========================================================
+incremental: true
 
 - csvkit and other command-line tools can make inspecting CSV files stay lightweight.
-- Certain validation checks can be automated.
-- Transforming input and output formats can be made easier.
+- Works well with the Unix utility piping philosophy.
+- Some validation checks can be automated.
+- Treating a csv as a SQL table and applying SQL against it if you are into that sort of thing.
+- Transforming input and output formats can be made easier.  More examples at the github page.
+- Munging data with tools rather than by hand makes for easier auditing and reproducible research.
 
 
 
-
-Data in a proprietary binary format is better than plaintext
+Questions and Thank You!
 ========================================================
+<br/>
 
-<br/>
-![False](img/dwight-the-office-ascii-231x300.png)
-***
-<br/>
-FALSE.
-The more available data is to user-chosen tools, the better off people are.
+Matt Pettis matthew.pettis@gmail.com
+
+This presentation, examples, and data: https://github.com/mpettis/csvkit_talk
+
+Resources:
+- csvkit : csvkit.readthedocs.org
+- _Data Science at the Command Line_, Jeroen Janssens
+
+![qrcode](img/qr-code-github.png)

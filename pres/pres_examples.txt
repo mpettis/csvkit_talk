@@ -1,7 +1,35 @@
 PRESENTATION EXAMPLES
 ========================================================================
 
-o. An example to show where command-line can really help:
+Assuming your present working directory is the root directory of this git repository.
+
+
+o. Raw CSV
+
+    cat dat/mtcars_001.csv
+
+
+
+o. Formatted CSV : csvlook
+
+    # Good for a quick peek
+    # Useful if you are on a server without a gui.
+    # Often like to copy and paste these results into emails if small.
+
+    csvlook dat/mtcars_001.csv
+
+
+
+
+o. Formatted CSV, wide
+
+    # `-S' switch on `less' stops lines from wrapping...
+
+    head -4 dat/wide_mtcars.csv | csvlook | less -S
+
+
+
+o. Getting fancy, combining with bash utilities.
 
     for f in $(ls example_cfg/*.csv); do
         echo
@@ -14,55 +42,72 @@ o. An example to show where command-line can really help:
 
 
 
-o. Raw CSV
-
-    cat dat/mtcars_001.csv | less
-
-o. Formatted CSV
-
-    cat dat/mtcars_001.csv | csvlook | less
-
-o. Formatted CSV, wide
-
-    head -4 dat/wide_mtcars.csv | csvlook | less -S
+................................
 
 o. Stack files (and format)
 
+    # Quick peak at a set of identically formatted files
+
+    ls -l dat/mtcars_0*.csv
+    for f in $(ls dat/mtcars_0*.csv); do echo; echo $f; head $f; done | less
+    for f in $(ls dat/mtcars_0*.csv); do echo; echo $f; head $f | csvlook; done | less
+
+
+    # Nice to put them all in one output
+
+    csvstack --filenames dat/mtcars_0*.csv | less
     csvstack --filenames dat/mtcars_0*.csv | csvlook | less
+
+
+
+................................
 
 o. Validate files
 
-    csvlook dat/mtcars_blank-select_cells.csv | less -S
+    # Can you find columns or cells with missing data?
+    cat dat/mtcars_blank-select_cells.csv
 
+
+    # How about now?
+    csvlook dat/mtcars_blank-select_cells.csv
+
+
+    # How about now?
     csvstat --nulls dat/mtcars_blank-select_cells.csv
 
+
+    # Automate this
     csvstat --max dat/mtcars_blank-select_cells.csv
+
+
+
+................................
 
 o. Cleaning files
 
-    less -S dat/mtcars_001.csv
+    # A good file
+    cat dat/escape_good.csv
 
-    less -S dat/mtcars_too-many-fields.csv
+    # A good file turned into a bad file
+    # Missing double quotes makes for wrong determination of columns
+    cat dat/escape_bad.csv
 
-    csvlook dat/mtcars_too-many-fields.csv | less -S
-
-    csvclean -n dat/mtcars_too-many-fields.csv
-
-    csvclean dat/mtcars_too-many-fields.csv
-
-    less dat/mtcars_too-many-fields_err.csv
-
-    less dat/mtcars_too-many-fields_out.csv
-
-    less dat/escape_good.csv
-
-    csvlook dat/escape_good.csv
-
-    less dat/escape_bad.csv
-
+    # You can see the impact quickly and directly
     csvlook dat/escape_bad.csv
 
+    # Assuming the header is right, you can tell which other rows have wrong columns
     csvclean -n dat/escape_bad.csv
+
+    # You can automatically keep rows that are good, and spit out rows that are bad
+    csvclean dat/escape_bad.csv
+
+        # Errors go to '_err' file, good lines go to '_out' file
+    less dat/escape_bad_err.csv
+    less dat/escape_bad_out.csv
+
+
+
+................................
 
 o. Getting from Excel to csv
 
@@ -72,25 +117,23 @@ o. Getting from Excel to csv
 
     in2csv --sheet "mtcars-s2" dat/xlsx_mtcars.xlsx | less -S
 
-o. In from lternate delimiters
 
-    less dat/mtcars_pipes.csv
 
-    in2csv -d\| dat/mtcars_pipes.csv | less
-
-    less dat/mtcars_tabs.csv
-
-    in2csv -t dat/mtcars_tabs.csv | less
-
-o. Out to alternate delimiters
-
-    less dat/mtcars_001.csv
-
-    csvformat -D\| dat/mtcars_001.csv | less
+................................
 
 o. Treating csv files as sql tables
 
+    # Compute average of a column
     csvsql --query "select avg(mpg) as avg_mpg from mtcars_001" dat/mtcars_001.csv
 
+    # Find rows with a value missing in a column
+    csvsql --query "select * from \"mtcars_blank-select_cells\" where gear is null" dat/mtcars_blank-select_cells.csv
 
+    # zeroing in on missing columns like a boss
+    csvstack --filenames dat/mtcars_0*.csv dat/mtcars_blank-select_cells.csv | csvstat --nulls
+    csvstack --filenames dat/mtcars_0*.csv dat/mtcars_blank-select_cells.csv | csvsql --query "select * from stdin where cyl is null" | csvlook
+
+
+    csvstack --filenames dat/mtcars_0*.csv dat/mtcars_blank-select_cells.csv | csvsql --query "select * from stdin where cyl == 8" | csvlook
+    csvstack --filenames dat/mtcars_0*.csv dat/mtcars_blank-select_cells.csv | csvsql --query "select * from stdin where name == 'AMC Javelin'" | csvlook
 
