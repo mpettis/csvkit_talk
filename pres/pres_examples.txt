@@ -117,8 +117,11 @@ o. Getting from Excel to csv
 
     in2csv --sheet "mtcars-s2" dat/xlsx_mtcars.xlsx | less -S
 
-
-
+    # How about formulas and dates?
+    # It performs the calculation AND pulls back the date (but in YYYY-MM-DD format)
+    # Here, the second column has a calculation
+    # And in the third column, the first value is set, and the remaining are calculations.
+    in2csv --sheet "Sheet1" formulas-and-dates.xlsx
 ................................
 
 o. Treating csv files as sql tables
@@ -136,4 +139,5 @@ o. Treating csv files as sql tables
 
     csvstack --filenames dat/mtcars_0*.csv dat/mtcars_blank-select_cells.csv | csvsql --query "select * from stdin where cyl == 8" | csvlook
     csvstack --filenames dat/mtcars_0*.csv dat/mtcars_blank-select_cells.csv | csvsql --query "select * from stdin where name == 'AMC Javelin'" | csvlook
+
 
